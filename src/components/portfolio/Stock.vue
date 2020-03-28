@@ -2,15 +2,15 @@
     <div class="col-sm-6 col-md-4">
         <div class="card" style="width: 18rem;">
             <div class="card-body row">
-                <h5 class="card-title col-sm-12">{{stock.name}}<small> (Price: {{stock.price}} | Quantity: {{stock.quantity}})</small></h5>
+                <h5 class="card-title col-sm-12">{{stock.name}}<br><small> (Price: {{stock.price | currency}} | Quantity: {{stock.quantity}})</small></h5>
                 <div class="col-sm-8 col-md-8">
-                    <input v-model="quantity" type="number" placeholder="Quantity" class="form-control">
+                    <input :class="{danger: insufficientQuantity}" v-model="quantity" type="number" placeholder="Quantity" class="form-control">
                 </div>
                 <div class="pull-right col-sm-4 col-md-4">
                     <button  
                             @click="sellStock" 
                             class="btn btn-info"
-                            :disabled="quantity <= 0">Sell</button>
+                            :disabled="insufficientQuantity || quantity <= 0">Sell</button>
                 </div>
             </div>
         </div>
@@ -27,6 +27,11 @@ export default {
     data(){
         return{
             quantity: 0
+        }
+    },
+    computed:{
+        insufficientQuantity(){
+            return this.quantity > this.stock.quantity;
         }
     },
     methods: {
@@ -56,5 +61,8 @@ export default {
             align-items: center;
             display: flex;
         }
+    }
+    .danger{
+        border: 1px solid red;
     }
 </style>
